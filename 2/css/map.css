@@ -1,0 +1,56 @@
+
+
+  .region-borders {
+    fill: none;
+    stroke: rgb(145, 51, 51);
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+  .region-borders :hover{
+    fill: tomato;
+  }
+  
+  .region-selected {
+    fill:slategray ;
+    stroke: #000;
+   
+  }
+  
+  .region :hover {
+    fill: yellow;
+  }
+
+  #svgclass {
+  background-color: lightskyblue;
+  
+  }
+  .labels {
+    fill: #444;
+    font-family:arial;
+    font-size:0.7em;
+  }
+ 
+  .tooltip {
+    display:inline-block;
+    position: absolute;;
+    border-style: none;
+    border-radius: 10%;
+    background-color:salmon;
+    text-align:center;
+    font-style: normal;
+    font-size:smaller ;
+    font: optical sizing 1;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.tooltipHead3{
+    
+    font-size: x-small;
+    color: seashell;
+}
+.tooltipHead4{
+    
+    font-size: x-small;
+    color:yellow;
+}

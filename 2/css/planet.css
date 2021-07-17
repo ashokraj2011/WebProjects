@@ -1,0 +1,61 @@
+*{
+    font-family: 'Inter';
+    color: forestgreen;
+}
+body{
+    margin: 100%;
+    margin-left:5% ;
+    margin-right: 5%;
+    margin-top: 2%;
+}
+
+#title{
+    font-weight: 900;
+    font-size: 90px;
+    color: firebrick;
+    margin: 0;
+    text-align: center;
+}
+
+.text{
+    font-weight: 500;
+    font-size: 24px;
+    color: fuchsia;
+    text-align: center;
+}
+#charts{
+    border: 2px solid red;
+    border-radius: 10px;
+}
+#btn-msg{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#btn{
+    width: 70px;
+    color: royalblue;
+    background-color: white;
+    font-size: 16px;
+    border: 2px solid red;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    margin: 20px;
+    
+
+}
+
+#btn:hover{
+color: whitesmoke;
+background-color: firebrick;
+}
+
+#msg{
+    color: forestgreen;
+}
+
+hr{
+    border: 1px solid violet;
+
+}

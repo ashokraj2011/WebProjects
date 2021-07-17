@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.outline {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.feature {
+  fill: #ccc;
+}
+
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-linejoin: round;
+}
+
+path {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+.county:hover{
+  fill:orange;
+}
+
+</style>
+<body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+
+<script>
+
+var width = 960,
+    height = 500;
+
+var projection = d3.geoAlbers();
+
+/*
+var projection = d3.geo.transverseMercator()
+          .rotate([120 + 30 / 60, -38 - 50 / 60])
+
+*/
+
+let url = "https://d3js.org/us-10m.v1.json";
+
+var resp;
+var xmlHttp;
+
+resp = '';
+xmlHttp = new XMLHttpRequest();
+
+if (xmlHttp != null) {
+  xmlHttp.open("GET", url, false);
+  xmlHttp.send(null);
+  resp = xmlHttp.responseText;
+}
+let resp_Json = JSON.parse(resp);
+
+let us=resp_Json
+
+var path = d3.geoPath()
+    .projection(projection);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  var states = topojson.feature(us, us.objects.states),
+      state = states.features.filter(function(d) { return d.id === '06'; })[0];
+
+  projection.scale(1)
+    .translate([0, 0]);
+ 
+  var b = path.bounds(state),
+    s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+    t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+ 
+  projection.scale(s)
+    .translate(t);
+ 
+    svg.append("path")
+      .datum(states)
+      .attr("class", "feature")
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .attr("class", "mesh")
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(state)
+      .attr("class", "outline")
+      .attr("d", path);
+
+
+</script>

@@ -1,0 +1,52 @@
+﻿STATE,STATE_CODE,REGION,STATE_ID
+Alabama,AL,South,01
+Alaska,AK,Pacific Northwest,02
+Arizona,AZ,Rock Mountain,04
+Arkansas,AR,South West,05
+California,CA,Southern Pacific,06
+Colorado,CO,Rock Mountain,08
+Connecticut,CT,North Atlantic,09
+Delaware,DE,Mid-Atlantic,10
+District of Columbia,DC,Mid-Atlantic,99
+Florida,FL,Florida,12
+Georgia,GA,South,13
+Hawaii,HI,Southern Pacific,15
+Idaho,ID,Rock Mountain,16
+Illinois,IL,Midwest,17
+Indiana,IN,Midwest,18
+Iowa,IA,Midwest,19
+Kansas,KS,Rock Mountain,20
+Kentucky,KY,Mid-Atlantic,21
+Louisiana,LA,South West,22
+Maine,ME,North Atlantic,23
+Maryland,MD,Mid-Atlantic,24
+Massachusetts,MA,North Atlantic,25
+Michigan,MI,Midwest,26
+Minnesota,MN,Midwest,27
+Mississippi,MS,South,28
+Missouri,MO,Midwest,29
+Montana,MT,Rock Mountain,30
+Nebraska,NE,Midwest,31
+Nevada,NV,Northern California,32
+New Hampshire,NH,North Atlantic,33
+New Jersey,NJ,Northeast,34
+New Mexico,NM,Rock Mountain,35
+New York,NY,Northeast,36
+North Carolina,NC,South,37
+North Dakota,ND,Midwest,38
+Ohio,OH,Mid-Atlantic,39
+Oklahoma,OK,South West,40
+Oregon,OR,Pacific Northwest,41
+Pennsylvania,PA,Mid-Atlantic,42
+Rhode Island,RI,North Atlantic,44
+South Carolina,SC,South,45
+South Dakota,SD,Midwest,46
+Tennessee,TN,South,47
+Texas,TX,South West,48
+Utah,UT,Rock Mountain,49
+Vermont,VT,North Atlantic,50
+Virginia,VA,Mid-Atlantic,51
+Washington,WA,Pacific Northwest,53
+West Virginia,WV,Mid-Atlantic,54
+Wisconsin,WI,Midwest,55
+Wyoming,WY,Rock Mountain,56

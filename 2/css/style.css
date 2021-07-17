@@ -1,0 +1,27 @@
+.line {
+    fill: none;
+    stroke-width: 1.5px;
+  }
+  circle{
+      fill:none;
+    outline: aqua;
+    stroke: aqua;
+    stroke-width: 2px;
+  }
+  path {
+    fill:none;
+    stroke:black;
+    
+  }
+
+  .counties {
+    fill: none;
+  }
+  
+  .states {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+  }
+  
+  
