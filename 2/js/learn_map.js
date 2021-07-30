@@ -2,6 +2,11 @@
 var svg = d3.select("svg");
 
 var temp_a;
+var width = 800;
+var height = 500;
+var prevSelectedRegion = '';
+svg.attr("width", width)
+svg.attr("height", height)
 
 let url = "https://d3js.org/us-10m.v1.json";
 
@@ -19,7 +24,7 @@ if (xmlHttp != null) {
 //let resp_Json = JSON.parse(resp);
 
 let resp_Json;
-d3.json("/Users/ashokraj/Documents/D3/2/js/Midwest1.json", function (d) {
+d3.json("/Users/ashokraj/Documents/D3/2/js/map_files/Mid-Atlantic1.json", function (d) {
     console.log(d);
     resp_Json=d;
   
@@ -45,11 +50,11 @@ let us=resp_Json
 // const geoJson=topojson.feature(us, us.objects.states)
 //
 // resp_Json.objects.Northern_California["geometries"]
-const geoJson=topojson.feature(resp_Json ,resp_Json.objects["Midwest"])
+const geoJson=topojson.feature(resp_Json ,resp_Json.objects["Mid-Atlantic"])
 //var projection = d3.geoMercator().fitSize([width, height], geojson);
 //var path = d3.geoPath().projection(projection);
-console.log(geoJson)
-var projection = d3.geoMercator().fitSize([800,700],geoJson);
+
+var projection = d3.geoMercator().fitSize([800,500],geoJson);
 var path = d3.geoPath(projection)
 svg.selectAll("path")
 .attr("class", "state-borders")
@@ -57,10 +62,10 @@ svg.selectAll("path")
 .enter().append("path")
 .attr("d", path).attr('fill','lightgrey').attr('stroke','white')
 
-/
+
 svg.append("path")
 .attr("class", "state-borders")
-.attr("d", path(topojson.mesh(resp_Json, resp_Json.objects["Midwest"], function(a, b) 
+.attr("d", path(topojson.mesh(resp_Json, resp_Json.objects["Mid-Atlantic"], function(a, b) 
 { 
     console.log("one set begin");
     temp_a=a;
@@ -68,7 +73,7 @@ svg.append("path")
     console.log(b);
     console.log("one set end");
     return a["properties"].STATEFP !== b["properties"].STATEFP; })))
-    .attr('stroke','red')
+    .attr('stroke','black')
 
 
 }
