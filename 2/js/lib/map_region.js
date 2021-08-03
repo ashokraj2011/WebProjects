@@ -1,5 +1,14 @@
-export function loadRegionMap(region, state_kpi_data_l,mymap,MidPoints,states_csv,us_states_json) {
+
+import {getStateDayWiseKPI} from './map_layer_country.js'
+import {getStateLantLong} from './map_layer_country.js'
+import {loadStateMap} from './map_state.js'
+
+var current_state = ''
+var previous_state = ''
+var state_kpi_data=[]
+export function loadRegionMap(region, state_kpi_data_l,mymap,MidPoints,states_csv,us_states_json,color) {
     console.log("selected region", region);
+    state_kpi_data=state_kpi_data_l
     console.log(state_kpi_data_l);
     //  console.log(states_csv)
     mymap.off();
@@ -25,7 +34,8 @@ export function loadRegionMap(region, state_kpi_data_l,mymap,MidPoints,states_cs
  */
     L.geoJSON(us_states_json, {
         filter: function (feature) {
-            //     console.log(feature.properties.name)
+            console.log(state_kpi_data_l)
+       
 
             // kl=temp2.filter(key => key.REGION.toUpperCase() === 'Midwest'.toUpperCase())
             //kl.map(e => e.STATE).indexOf("Indiana")
@@ -41,13 +51,22 @@ export function loadRegionMap(region, state_kpi_data_l,mymap,MidPoints,states_cs
 
         style: function (feature) {
             try {
-                var temp = region_kpi.filter((({ REGION }) => REGION === feature.properties.region))
-                //       console.log(temp)
-                var in_stock_rate = temp[0]["INSTOCK_RATE"]
+               // console.log(feature.properties.region,state_kpi_data_l)
+               console.log("ff",feature)
+                var state_name =feature.properties.name
+                var temp = state_kpi_data_l.filter((({ STATE_NAME }) => STATE_NAME === state_name))
+                console.log("temp=",temp)
+                var in_stock_rate =100
+                if (temp.length===0){
+                    in_stock_rate =100
+                }else {
+                 in_stock_rate = temp[0]["CUR_INSTOCK_RATE"]
+                }
                 //     console.log(color(in_stock_rate))
                 return { fillColor: color(in_stock_rate) };
             } catch (err) {
                 //do nothong
+                console.log(err)
 
             }
 
@@ -64,10 +83,18 @@ export function loadRegionMap(region, state_kpi_data_l,mymap,MidPoints,states_cs
         var results = leafletPip.pointInLayer(e.latlng, gjLayer);
         try {
             var rg = results[0].feature.properties
+            console.log("calling long lat",rg.name);
+            document.getElementById('moveAble').style.opacity = 0
+            getStateLantLong(rg.name,loadStateMapInit)
+            function loadStateMapInit(error,state_long_lat,state_master_instock_prv_stock){
+            loadStateMap(state_long_lat,mymap,us_states_json,state_master_instock_prv_stock,color)}
+            
+           
+
         
         } catch (err) {
 
-            console.log("error")
+            console.log(err)
         }
        
     }
@@ -114,7 +141,7 @@ addTableRegion(filterd_state_data);
 
 
 function onHover(e) {
-    console.log(e)
+   
     //console.log(e.x)
     var gjLayer = L.geoJson(us_states_json);
     var results = leafletPip.pointInLayer(e.latlng, gjLayer);
@@ -130,16 +157,16 @@ function onHover(e) {
         //    ["layerPoint"].x
         var x = e["layerPoint"].x
         var y = e["layerPoint"].y
-        console.log(x, y)
+        
         //calll create chart 
         console.log("rg==",rg)
-        current_region = rg.region
+        current_state = rg.name
         //var current_region=''
         //var previous_region=''
-        if (current_region != previous_region) {
-            getRegionDayWiseKPI(rg.region, '2021-01-01', '2021-11-11', createChart)
+        if (current_state != previous_state) {
+            getStateDayWiseKPI(current_state, '2021-01-01', '2021-11-11', createChartState)
         }
-        previous_region = rg.region
+        previous_state = rg.name
         //   console.log("doc " , document.getElementById('moveAble'))'
         document.getElementById('moveAble').style.opacity = 1
         document.getElementById('moveAble').style.marginLeft = x + "px";
@@ -154,8 +181,8 @@ function onHover(e) {
 
         // console.log(region_kpi)
     } catch (err) {
-
-        console.log("error")
+        document.getElementById('moveAble').style.opacity = 0;
+       // console.log("error")
     }
 }
 mymap.on('mousemove', onHover);
@@ -171,13 +198,13 @@ mymap.on('mouseout', onMoseOut);
 
 
 function addTableRegion(tabdata) {
-    console.log("tab " ,tabdata);
+    //console.log("tab " ,tabdata);
   //  <h2 id = "id1H2" class="h2class">In Stock Rate By Region</h2>
     if(tabdata.length==1){
         document.getElementById("id1H2").innerText = "In Stock Rate in " + tabdata.flatMap(Object.values)[0]
 
     }else {
-  document.getElementById("id1H2").innerText = "In Stock Rate in " + tabdata[1]["REGION"]
+  document.getElementById("id1H2").innerText = "In Stock Rate in " + tabdata[1]["STATE_NAME"]
     }
     $("#datatable").remove();
     $("#datatablediv").append(" <table id=\"datatable\"></table>")
@@ -208,3 +235,63 @@ function addTableRegion(tabdata) {
     markup = markup + row
     $("#datatable").append(markup);
 }
+
+function getInstockRateState(current_state,sate_data){
+    console.log("instate ",current_state)
+   // console.log(state_kpi_data)
+ 
+    var INSTOCK_RATE = state_kpi_data.find(key => key.STATE_NAME.toUpperCase() === current_state.toUpperCase()).CUR_INSTOCK_RATE
+    var PRV_INSTOCK_RATE = state_kpi_data.find(key => key.STATE_NAME.toUpperCase() === current_state.toUpperCase()).PRV_INSTOCK_RATE
+    var in_stock_rate_diff = Math.round(INSTOCK_RATE - PRV_INSTOCK_RATE, 2)
+
+    return [INSTOCK_RATE, PRV_INSTOCK_RATE, in_stock_rate_diff]
+
+}
+
+function createChartState(error, sate_data) {
+
+     console.log("called create chart  STATE",current_state)
+  
+      //<div class="info" id="id2"  style="width: 100; height: 100;">
+      //<p>In Stock Rate: 10 %  (-8%   )  </p>
+      //<canvas id="myChart" width="100" height="100"></canvas>
+     var metrics=getInstockRateState(current_state,sate_data)
+        console.log("metrics " ,metrics)
+      document.querySelector("#id2").innerHTML = ' <p>' + current_state +' <br>ISR: ' + metrics[0]  + '% </p> <canvas id="myChart" width="200" height="200"></canvas>';
+  
+  
+      var ctx = document.getElementById('myChart').getContext('2d');
+      // const labels = ['Jan','Feb','Mar'];
+      const labels = []
+      sate_data.forEach(function (item) { labels.push(item.WEEKBDAY) })
+     // console.log("label", labels)
+      const mydatadata = []
+      sate_data.forEach(function (item) { mydatadata.push(item.IN_STOCK_RATE) })
+   //   console.log("mydatadata", mydatadata)
+      const data = {
+          labels: labels,
+          //legend: { display: false },
+          datasets: [{
+              label: '',
+              data: mydatadata,
+  
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0
+          }]
+      };
+  
+      const config = {
+          type: 'line',
+          data: data,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+              }
+          }
+      };
+  
+      const chart = new Chart(ctx, config)
+  }

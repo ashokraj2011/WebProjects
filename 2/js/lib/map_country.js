@@ -1,6 +1,7 @@
 var current_region = ''
 var previous_region = ''
 var region_data=[]
+var region_kpi=[]
 export function initRegionMap(mymap) {
     mymap = L.map('mapid').setView([37, -99], 6);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXNob2tyYWoiLCJhIjoiY2txcmY3aDVjMTBicDJ3cGJ0Z2o0enZ5bCJ9.MgxILsBUMHFlXRR_TuI6lQ', {
@@ -18,15 +19,16 @@ export function initRegionMap(mymap) {
 }
  
 
-export function loadDataToRegionMap(mymap, states, color, region_kpi) {
+export function loadDataToRegionMap(mymap, states, color, region_kpi_in) {
+    region_kpi=region_kpi_in
     L.geoJSON(states, {
 
         style: function (feature) {
             try {
                 var temp = region_kpi.filter((({ REGION }) => REGION === feature.properties.region))
-                console.log(temp)
+               // console.log(temp)
                 var in_stock_rate = temp[0]["INSTOCK_RATE"]
-                console.log("color ", color(in_stock_rate))
+               // console.log("color ", color(in_stock_rate))
                 return {
                     fillColor: color(in_stock_rate),
                     //fillColor: "red",
@@ -47,7 +49,7 @@ export function loadDataToRegionMap(mymap, states, color, region_kpi) {
 }
 
 
-export function addClickEventToRegMap(states, mymap, getStateAPI, loadRegionMap, MidPoints, states_csv, us_states_json, getRegionDayWiseKPI) {
+export function addClickEventToRegMap(states, mymap, getStateAPI, loadRegionMap, MidPoints, states_csv, us_states_json, getRegionDayWiseKPI,color) {
 
     function onMapClick(e) {
        // console.log(e.latlng)
@@ -59,7 +61,7 @@ export function addClickEventToRegMap(states, mymap, getStateAPI, loadRegionMap,
             document.getElementById('moveAble').style.opacity = 0
             getStateAPI(callRegonMap)
             function callRegonMap(error, state_kpi_data) {
-                loadRegionMap(rg["region"], state_kpi_data, mymap, MidPoints, states_csv, us_states_json);
+                loadRegionMap(rg["region"], state_kpi_data, mymap, MidPoints, states_csv, us_states_json,color);
             }
 
         } catch (err) {
@@ -78,7 +80,7 @@ export function addClickEventToRegMap(states, mymap, getStateAPI, loadRegionMap,
         //console.log(e.x)
         var gjLayer = L.geoJson(states);
         var results = leafletPip.pointInLayer(e.latlng, gjLayer);
-        //     console.log(results)
+         // console.log(results)
         try {
             var rg = results[0].feature.properties
             //     console.log("region as " , rg["region"])
@@ -114,9 +116,9 @@ export function addClickEventToRegMap(states, mymap, getStateAPI, loadRegionMap,
 
             // console.log(region_kpi)
         } catch (err) {
+            document.getElementById('moveAble').style.opacity = 0;
 
-            console.log("error")
-        }
+         }
     }
     mymap.on('mousemove', onHover);
 
@@ -136,9 +138,9 @@ function createChart(error, regoin_data) {
     //<div class="info" id="id2"  style="width: 100; height: 100;">
     //<p>In Stock Rate: 10 %  (-8%   )  </p>
     //<canvas id="myChart" width="100" height="100"></canvas>
-    
+   var metrics=getInstockRateRegion(current_region)
 
-    document.querySelector("#id2").innerHTML = ' <p>In Stock Rate: 10 %  (-8%   )  </p> <canvas id="myChart" width="100" height="100"></canvas>';
+    document.querySelector("#id2").innerHTML = ' <p>' + current_region +' <br>ISR: ' + metrics[0]  + '% </p> <canvas id="myChart" width="200" height="200"></canvas>';
 
 
     var ctx = document.getElementById('myChart').getContext('2d');
@@ -226,7 +228,7 @@ export function addTextLabelAndKPIRegion(MidPoints, region_kpi, mymap) {
 }
 
 
-export function getInstockRateRegion(region, region_kpi) {
+export function getInstockRateRegion(region) {
     //Helper function for Text 
 
     var INSTOCK_RATE = region_kpi.find(key => key.REGION.toUpperCase() === region.toUpperCase()).INSTOCK_RATE

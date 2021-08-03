@@ -21,6 +21,11 @@ export var MidPoints = {
     //.domain([0,99]);
 
 
-  export var color = d3.scaleSequential()
-    .domain([30,50])
-    .interpolator(d3.interpolateGreens);
+ // export var color = d3.scaleSequential()
+  //  .domain([38,50])
+   // .interpolator(d3.interpolateRainbow);
+
+
+    export var color = d3.scaleSequential()
+    .domain([38,45])
+    .interpolator(d3.interpolate("red", "green"));;

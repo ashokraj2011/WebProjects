@@ -1,7 +1,7 @@
 
-import { getRegionMapJson } from './map_layer_country.js';
-import { getRegoinAPI } from './map_layer_country.js';
-import { getStateAPI } from './map_layer_country.js'
+import { getRegionMapJson } from './lib/map_layer_country.js';
+import { getRegoinAPI } from './lib/map_layer_country.js';
+import { getStateAPI } from './lib/map_layer_country.js'
 import  {MidPoints } from './lib/variables.js '
 import {color} from './lib/variables.js'
 import  { initRegionMap} from './lib/map_country.js'
@@ -11,7 +11,7 @@ import {addTextLabelAndKPIRegion }  from  './lib/map_country.js'
 import {fillCountryData} from './lib/map_country.js '
 
 import {loadRegionMap} from './lib/map_region.js'
-import {getRegionDayWiseKPI} from './map_layer_country.js'
+import {getRegionDayWiseKPI} from './lib/map_layer_country.js'
 
 
 
@@ -19,6 +19,8 @@ import {getRegionDayWiseKPI} from './map_layer_country.js'
 var svg = d3.select("#mapid");
 var div = d3.select("body").select(".tooltip");
 var region_in_stock_g;
+//document.getElementById('switchID').style.marginLeft = 10 + "px";
+//document.getElementById('switchID').style.marginTop =  20 + "px";
 
 
 
@@ -73,7 +75,7 @@ function loadMap(error, states_geojson, us_states_json, states_csv) {
     ]);
 
 
-   
+    mymap.invalidateSize()
 
     document.getElementById("btnhome").addEventListener("click", home);
 
@@ -84,7 +86,7 @@ function loadMap(error, states_geojson, us_states_json, states_csv) {
 
     //add click event to the Regional map
 
-    addClickEventToRegMap( states,mymap,getStateAPI,loadRegionMap,MidPoints,states_csv,us_states_json,getRegionDayWiseKPI)
+    addClickEventToRegMap( states,mymap,getStateAPI,loadRegionMap,MidPoints,states_csv,us_states_json,getRegionDayWiseKPI,color)
    
     //{ lat: 40.979898069620155, lng: -109.08984482288362 }
     addTextLabelAndKPIRegion(MidPoints,region_kpi,mymap)
